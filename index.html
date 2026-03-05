@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>AI Ecosystem Top 100 — Interactive Power Map</title>
+<title>AI Ecosystem Power Map — Interactive</title>
 <script src="https://d3js.org/d3.v7.min.js"></script>
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;700&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet">
 <style>
@@ -13,7 +13,7 @@ body{background:#08080d;color:#e0e0e0;font-family:'JetBrains Mono',monospace;ove
 #header>*{pointer-events:auto;}
 h1{font-family:'Syne',sans-serif;font-weight:800;font-size:20px;letter-spacing:-0.5px;background:linear-gradient(135deg,#ff6b35,#ff3864,#b537f2);-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
 h1 span{display:block;font-size:10px;font-weight:400;font-family:'JetBrains Mono',monospace;-webkit-text-fill-color:#555;margin-top:2px;letter-spacing:1.5px;text-transform:uppercase;}
-#legend{display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end;max-width:700px;}
+#legend{display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end;max-width:760px;}
 .legend-item{display:flex;align-items:center;gap:4px;font-size:9px;color:#666;text-transform:uppercase;letter-spacing:0.5px;}
 .legend-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
 .legend-line{width:16px;height:2px;flex-shrink:0;border-radius:1px;}
@@ -55,23 +55,92 @@ h1 span{display:block;font-size:10px;font-weight:400;font-family:'JetBrains Mono
 .tt-sub{color:#888;font-size:10px;}
 .tt-click{color:#ff6b35;font-size:9px;margin-top:6px;text-transform:uppercase;letter-spacing:1px;}
 #stats{position:fixed;bottom:16px;right:16px;z-index:100;font-size:9px;color:#444;text-align:right;}
+/* University nodes */
+.legend-dot.university{background:#22d3ee;}
+/* Path Finder Panel */
+#path-finder{position:fixed;top:70px;left:16px;z-index:150;width:280px;background:rgba(12,12,20,0.95);border:1px solid rgba(255,255,255,0.08);border-radius:10px;backdrop-filter:blur(20px);overflow:hidden;}
+.pf-header{display:flex;justify-content:space-between;align-items:center;padding:12px 16px;border-bottom:1px solid rgba(255,255,255,0.06);}
+.pf-title{font-family:'Syne',sans-serif;font-weight:700;font-size:12px;color:#ff6b35;text-transform:uppercase;letter-spacing:1px;}
+.pf-toggle{background:none;border:none;color:#666;font-size:16px;cursor:pointer;padding:0 4px;}
+.pf-toggle:hover{color:#fff;}
+#pf-body{padding:12px 16px;}
+.pf-row{margin-bottom:10px;}
+.pf-label{display:block;font-size:9px;color:#666;text-transform:uppercase;letter-spacing:1px;margin-bottom:4px;}
+.pf-select{width:100%;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);color:#e0e0e0;padding:6px 10px;border-radius:6px;font-family:'JetBrains Mono',monospace;font-size:10px;outline:none;cursor:pointer;}
+.pf-select:focus{border-color:#ff6b35;}
+.pf-actions{display:flex;gap:8px;margin-bottom:12px;}
+.pf-btn{flex:1;background:rgba(255,107,53,0.15);border:1px solid rgba(255,107,53,0.3);color:#ff6b35;padding:6px;border-radius:6px;font-family:'JetBrains Mono',monospace;font-size:10px;cursor:pointer;text-transform:uppercase;letter-spacing:0.5px;transition:all 0.2s;}
+.pf-btn:hover{background:rgba(255,107,53,0.3);}
+.pf-clear{background:rgba(255,255,255,0.05);border-color:rgba(255,255,255,0.1);color:#666;}
+.pf-clear:hover{color:#fff;background:rgba(255,255,255,0.1);}
+#pf-result{font-size:10px;}
+.pf-path-chain{display:flex;flex-wrap:wrap;gap:4px;align-items:center;margin-bottom:8px;}
+.pf-node-chip{background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.12);border-radius:4px;padding:3px 8px;color:#ddd;font-size:9px;cursor:pointer;transition:all 0.15s;white-space:nowrap;}
+.pf-node-chip:hover{background:rgba(255,107,53,0.2);border-color:#ff6b35;color:#ff6b35;}
+.pf-hop-arrow{color:#555;font-size:10px;}
+.pf-summary{font-size:9px;color:#666;margin-top:6px;}
+.pf-no-path{color:#ef5350;font-size:10px;padding:8px 0;}
+/* Key Metrics */
+.metrics-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px;}
+.metric-box{background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);border-radius:6px;padding:8px 10px;}
+.metric-val{font-family:'Syne',sans-serif;font-weight:700;font-size:18px;color:#fff;}
+.metric-lbl{font-size:8px;color:#666;text-transform:uppercase;letter-spacing:0.8px;margin-top:2px;}
+.conn-bars{display:flex;flex-direction:column;gap:4px;}
+.conn-bar-row{display:flex;align-items:center;gap:8px;font-size:9px;}
+.conn-bar-label{color:#888;width:60px;text-transform:capitalize;flex-shrink:0;}
+.conn-bar-track{flex:1;height:4px;background:rgba(255,255,255,0.05);border-radius:2px;overflow:hidden;}
+.conn-bar-fill{height:100%;border-radius:2px;transition:width 0.5s;}
+.conn-bar-count{color:#666;width:20px;text-align:right;flex-shrink:0;}
+/* News Feed */
+.news-item{padding:8px 0;border-bottom:1px solid rgba(255,255,255,0.04);}
+.news-item:last-child{border-bottom:none;}
+.news-headline{font-size:11px;color:#ccc;line-height:1.5;margin-bottom:4px;}
+.news-meta{display:flex;gap:8px;align-items:center;}
+.news-source{font-size:9px;color:#666;}
+.news-date{font-size:9px;color:#555;}
+.news-tag{font-size:8px;padding:1px 6px;border-radius:3px;background:rgba(255,107,53,0.15);color:#ff6b35;text-transform:uppercase;letter-spacing:0.5px;}
+.news-empty{font-size:11px;color:#555;font-style:italic;}
 </style>
 </head>
 <body>
 <div id="header">
-  <h1>AI Power Map<span>100 Nodes · Companies · People · Power Flows · 2025</span></h1>
+  <h1>AI Power Map<span>Companies &middot; People &middot; Academia &middot; Power Flows &middot; 2025</span></h1>
   <div id="legend">
     <div class="legend-item"><div class="legend-dot" style="background:#ff6b35"></div>S-Tier Co.</div>
     <div class="legend-item"><div class="legend-dot" style="background:#f5a623"></div>Startup</div>
     <div class="legend-item"><div class="legend-dot" style="background:#b537f2"></div>Other Major</div>
     <div class="legend-item"><div class="legend-dot" style="background:#4fc3f7"></div>Person</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#22d3ee"></div>University</div>
     <div class="legend-item"><div class="legend-line" style="background:#4a90d9"></div>Funding</div>
     <div class="legend-item"><div class="legend-line" style="background:#66bb6a"></div>Compute</div>
     <div class="legend-item"><div class="legend-line" style="background:#ef5350"></div>Talent</div>
     <div class="legend-item"><div class="legend-line" style="background:#ce93d8"></div>Partner</div>
+    <div class="legend-item"><div class="legend-line" style="background:#fbbf24"></div>Academic</div>
+    <div class="legend-item"><div class="legend-line" style="background:#f472b6"></div>Mentored</div>
   </div>
 </div>
-<div id="search-box"><input type="text" id="search" placeholder="Search nodes & tags..." autocomplete="off"></div>
+<div id="search-box"><input type="text" id="search" placeholder="Search nodes &amp; tags..." autocomplete="off"></div>
+<div id="path-finder">
+  <div class="pf-header">
+    <span class="pf-title">Path Finder</span>
+    <button class="pf-toggle" onclick="togglePathFinder()">&#8722;</button>
+  </div>
+  <div id="pf-body">
+    <div class="pf-row">
+      <label class="pf-label">From</label>
+      <select id="pf-from" class="pf-select"></select>
+    </div>
+    <div class="pf-row">
+      <label class="pf-label">To</label>
+      <select id="pf-to" class="pf-select"></select>
+    </div>
+    <div class="pf-actions">
+      <button class="pf-btn" onclick="runPathFinder()">Find Path</button>
+      <button class="pf-btn pf-clear" onclick="clearPath()">Clear</button>
+    </div>
+    <div id="pf-result"></div>
+  </div>
+</div>
 <svg id="graph"></svg>
 <div id="tooltip"></div>
 <div id="detail-panel">
@@ -84,17 +153,27 @@ h1 span{display:block;font-size:10px;font-weight:400;font-family:'JetBrains Mono
     <div class="panel-mcap" id="panel-mcap"></div>
   </div>
   <div class="panel-section"><div class="panel-section-title">Why They Matter</div><div class="panel-text" id="panel-why"></div></div>
-  <div class="panel-section"><div class="panel-section-title">Key Facts & Contributions</div><div class="panel-text" id="panel-facts"></div></div>
+  <div class="panel-section"><div class="panel-section-title">Key Facts &amp; Contributions</div><div class="panel-text" id="panel-facts"></div></div>
   <div class="panel-section"><div class="panel-section-title">Connections</div><ul class="panel-connections" id="panel-connections"></ul></div>
+  <div class="panel-section" id="panel-metrics-section">
+    <div class="panel-section-title">Key Metrics</div>
+    <div class="metrics-grid" id="panel-metrics"></div>
+    <div class="conn-bars" id="panel-conn-bars"></div>
+  </div>
+  <div class="panel-section" id="panel-news-section">
+    <div class="panel-section-title">Recent News</div>
+    <div id="panel-news"></div>
+  </div>
   <div class="panel-section"><div class="panel-section-title">Tags</div><div class="panel-tags" id="panel-tags"></div></div>
 </div>
 <div id="controls">
-  <button class="ctrl-btn" onclick="resetZoom()">Reset</button>
-  <button class="ctrl-btn" id="btn-labels" onclick="toggleLabels()">Labels: On</button>
-  <button class="ctrl-btn" id="btn-edges" onclick="toggleEdges()">Edges: On</button>
+  <button class="ctrl-btn" onclick="resetZoom()">Reset View</button>
+  <button class="ctrl-btn active" id="btn-labels" onclick="toggleLabels()">Labels: On</button>
+  <button class="ctrl-btn active" id="btn-edges" onclick="toggleEdges()">Edges: On</button>
   <button class="ctrl-btn" id="btn-tier" onclick="cycleTierFilter()">All Tiers</button>
+  <button class="ctrl-btn" id="btn-view" onclick="cycleViewFilter()">View: All</button>
 </div>
-<div id="stats"><div id="node-count"></div><div>Scroll zoom · Drag nodes · Click for details</div></div>
+<div id="stats"><span id="node-count"></span></div>
 <script>
 const nodes=[{id:"NVIDIA",label:"NVIDIA",type:"s-company",group:"NVIDIA",tier:"S",mcap:3000,img:"https://upload.wikimedia.org/wikipedia/sco/thumb/2/21/Nvidia_logo.svg/200px-Nvidia_logo.svg.png",role:"GPU & AI Chip Monopoly",why:"Controls ~90% of AI training chip market. Every major AI lab depends on NVIDIA hardware. Jensen Huang turned a gaming GPU company into the backbone of the AI revolution.",facts:"<strong>Market cap:</strong> ~$3T<br><strong>Key products:</strong> H100, B200, GB200 NVL72, CUDA<br><strong>Moat:</strong> CUDA software lock-in — switching costs are enormous<br><strong>Revenue:</strong> Data center went from $15B to $47B+ in one year<br><strong>Supply chain:</strong> 100% dependent on TSMC for fabrication<br><strong>Geopolitical:</strong> US-China chip export controls shaped by NVIDIA dominance",tags:["GPU","Hardware","CUDA","Data Center"]},{id:"Microsoft",label:"Microsoft",type:"s-company",group:"Microsoft",tier:"S",mcap:3100,role:"Largest AI Investor & Deployer",why:"Bet $13B+ on OpenAI and integrated AI across every product. Azure is the cloud backbone for OpenAI. Copilot suite generates $75B+ in AI-adjacent revenue.",facts:"<strong>Market cap:</strong> ~$3.1T<br><strong>OpenAI deal:</strong> $13B+, exclusive cloud provider, 49% profit share<br><strong>Copilot:</strong> GitHub Copilot (1.8M+ devs), M365 Copilot, Windows Copilot<br><strong>Azure AI:</strong> Fastest growing cloud segment<br><strong>Inflection:</strong> Hired Suleyman + team without formal acquisition",tags:["Cloud","Enterprise","Copilot","Azure"]},{id:"Apple",label:"Apple",type:"s-company",group:"Apple",tier:"S",mcap:3500,role:"World's Most Valuable Company",why:"Apple Intelligence brings AI to 2B+ devices. On-device ML strategy is unique. Partnership with OpenAI for Siri. Custom silicon is AI-optimized. Controls the distribution layer.",facts:"<strong>Market cap:</strong> ~$3.5T (most valuable company)<br><strong>Apple Intelligence:</strong> On-device AI for summarization, writing, image gen<br><strong>OpenAI partnership:</strong> ChatGPT integrated into Siri/iOS 18+<br><strong>Custom silicon:</strong> M4 chips with 38 TOPS Neural Engine<br><strong>Privacy:</strong> On-device processing as competitive differentiator<br><strong>TSMC:</strong> Largest TSMC customer by revenue",tags:["Consumer","Hardware","On-Device AI","Privacy","Silicon"]},{id:"Alphabet",label:"Alphabet",type:"s-company",group:"Google",tier:"S",mcap:2200,role:"Google & DeepMind Parent",why:"Invented the Transformer (2017). Owns DeepMind. Gemini models compete at frontier. Google Search, YouTube, Android give unmatched distribution.",facts:"<strong>Market cap:</strong> ~$2.2T<br><strong>Transformer paper:</strong> 'Attention Is All You Need' (2017)<br><strong>Gemini:</strong> Multimodal frontier model<br><strong>TPUs:</strong> Custom AI chips (with Broadcom)<br><strong>Anthropic:</strong> $2B+ investment<br><strong>AI integration:</strong> Search, Gmail, Docs, Android, Pixel",tags:["Search","Cloud","Transformer","Gemini","TPU"]},{id:"DeepMind",label:"DeepMind",type:"s-company",group:"Google",tier:"S",mcap:0,role:"Top AI Research Lab",why:"Most scientifically impactful AI lab. AlphaFold solved a 50-year biology problem. AlphaGo changed public perception of AI. Builds Gemini.",facts:"<strong>Acquired:</strong> Google bought for $500M (2014)<br><strong>AlphaFold:</strong> 200M+ protein structures — Nobel Prize 2024<br><strong>AlphaGo:</strong> Beat world Go champion (2016)<br><strong>Gemini:</strong> Leads development after Google Brain merger<br><strong>Team:</strong> ~3000 researchers",tags:["Research","AlphaFold","Nobel","Gemini"]},{id:"OpenAI",label:"OpenAI",type:"s-company",group:"OpenAI",tier:"S",mcap:500,role:"Leading AI Lab ($500B)",why:"ChatGPT triggered the AI gold rush. GPT-4 set the frontier. Most well-known AI company. Apple partnership extends reach to billions.",facts:"<strong>Valuation:</strong> ~$500B (most valuable startup ever)<br><strong>ChatGPT:</strong> Fastest to 100M users in history<br><strong>Models:</strong> GPT-4, GPT-4o, o1/o3, Sora, DALL-E<br><strong>Board crisis:</strong> Altman fired & rehired Nov 2023<br><strong>Revenue:</strong> ~$12B+ ARR<br><strong>Key exits:</strong> Ilya→SSI, Amodeis→Anthropic, Karpathy",tags:["ChatGPT","GPT-4","Frontier","AGI","API"]},{id:"Anthropic",label:"Anthropic",type:"s-company",group:"Anthropic",tier:"S",mcap:380,role:"AI Safety Leader ($380B)",why:"Founded by ex-OpenAI researchers over safety concerns. Claude models are top-tier. Constitutional AI is unique. $4B Amazon + $2B Google backing.",facts:"<strong>Valuation:</strong> ~$380B<br><strong>Founded:</strong> 2021 by Dario & Daniela Amodei<br><strong>Claude:</strong> 3.5 Sonnet widely considered best coding model<br><strong>Constitutional AI:</strong> Novel alignment technique<br><strong>Funding:</strong> $4B Amazon, $2B Google<br><strong>Revenue:</strong> ~$2B+ ARR",tags:["Claude","Safety","Constitutional AI","Research"]},{id:"Meta",label:"Meta",type:"s-company",group:"Meta",tier:"S",mcap:1600,role:"Open-Source AI Champion",why:"LLaMA made open-source AI viable at frontier scale. $35B+ capex on GPUs. FAIR lab is world-class. Strategy: give away models, profit from ecosystem.",facts:"<strong>Market cap:</strong> ~$1.6T<br><strong>LLaMA:</strong> 3.1 405B best open-weight model<br><strong>GPU spend:</strong> $35B+ capex, 350K+ H100s<br><strong>FAIR:</strong> Led by Yann LeCun since 2013<br><strong>AMD:</strong> Major MI300X customer alongside NVIDIA<br><strong>Users:</strong> AI powers feed/ads/content moderation for 3.9B users",tags:["Open Source","LLaMA","FAIR","Social","Ads"]},{id:"Amazon",label:"Amazon",type:"s-company",group:"Infra",tier:"S",mcap:2100,role:"Cloud + AI Investor",why:"AWS ~30% cloud market. $4B Anthropic investment. Bedrock platform. Trainium/Inferentia custom chips challenge NVIDIA.",facts:"<strong>Market cap:</strong> ~$2.1T<br><strong>AWS:</strong> ~$100B+ annual run rate<br><strong>Anthropic:</strong> $4B investment, Claude on AWS<br><strong>Custom chips:</strong> Trainium2, Inferentia2<br><strong>Bedrock:</strong> Multi-model AI platform<br><strong>Adept:</strong> Acqui-hired AI agent team",tags:["AWS","Cloud","Anthropic","Custom Chips"]},{id:"TSMC",label:"TSMC",type:"s-company",group:"Infra",tier:"S",mcap:800,role:"The World's Chipmaker",why:"Fabricates virtually EVERY advanced AI chip. Without TSMC, the AI revolution stops. Single point of failure for the entire industry.",facts:"<strong>Market cap:</strong> ~$800B<br><strong>Share:</strong> ~90% of advanced chips (sub-7nm)<br><strong>Customers:</strong> NVIDIA, Apple, AMD, Google, Amazon<br><strong>Geopolitics:</strong> Taiwan location = massive risk<br><strong>Arizona:</strong> $40B+ US factory under construction<br><strong>Tech:</strong> 3nm in production, 2nm coming 2025",tags:["Fabrication","Chips","Taiwan","Geopolitics","Monopoly"]},{id:"AMD",label:"AMD",type:"s-company",group:"Infra",tier:"S",mcap:200,role:"NVIDIA's GPU Challenger",why:"MI300X is the only credible NVIDIA alternative for AI. Major clouds buying AMD to diversify. ROCm improving but behind CUDA.",facts:"<strong>Market cap:</strong> ~$200B<br><strong>MI300X:</strong> 192GB HBM3 (more than H100)<br><strong>Customers:</strong> Microsoft Azure, Meta, Oracle<br><strong>ROCm:</strong> Open-source CUDA competitor<br><strong>TSMC:</strong> All chips fabbed by TSMC<br><strong>EPYC:</strong> Dominating server CPUs<br><strong>Xilinx:</strong> Acquired for $49B (FPGAs)",tags:["GPU","MI300X","ROCm","EPYC","Challenger"]},{id:"xAI",label:"xAI",type:"s-company",group:"xAI",tier:"S",mcap:200,role:"Elon Musk's AI Lab",why:"Grok models + X/Twitter data. Built 100K GPU Memphis supercluster at record speed. $200B+ valuation.",facts:"<strong>Valuation:</strong> $200B+<br><strong>Grok:</strong> Trained on X/Twitter data<br><strong>Colossus:</strong> 100K H100 cluster built in ~4 months<br><strong>Team:</strong> Hired from DeepMind, OpenAI, Google",tags:["Grok","X/Twitter","GPU Cluster"]},
 {id:"Tesla",label:"Tesla",type:"other-company",group:"Other",tier:"A",mcap:800,role:"AI-Powered Autonomous Driving",why:"FSD is one of the largest real-world AI deployments. Dojo supercomputer. Optimus robot. Fleet data moat is unmatched.",facts:"<strong>Market cap:</strong> ~$800B<br><strong>FSD:</strong> Full Self-Driving in ~2M vehicles<br><strong>Dojo:</strong> Custom training supercomputer<br><strong>Optimus:</strong> Humanoid robot<br><strong>Data:</strong> Billions of miles of driving data",tags:["Autonomous","FSD","Robotics","Optimus"]},{id:"Palantir",label:"Palantir",type:"other-company",group:"Other",tier:"A",mcap:200,role:"AI for Defense & Enterprise",why:"AIP is the leading way governments deploy LLMs on sensitive data.",facts:"<strong>Market cap:</strong> ~$200B<br><strong>AIP:</strong> Deploy LLMs on sensitive data<br><strong>Defense:</strong> US military, intelligence, NATO<br><strong>Partners:</strong> OpenAI, Anthropic models",tags:["Defense","Enterprise","Government","AIP"]},{id:"Broadcom",label:"Broadcom",type:"other-company",group:"Other",tier:"A",mcap:800,role:"Custom AI Chip Designer",why:"Designs Google TPUs and custom AI accelerators. As companies seek NVIDIA alternatives, Broadcom's ASIC business is booming.",facts:"<strong>Market cap:</strong> ~$800B<br><strong>Google TPUs:</strong> Co-designed — powers Gemini<br><strong>Custom ASICs:</strong> For major cloud providers<br><strong>Networking:</strong> Dominant in data center networking<br><strong>VMware:</strong> Acquired for $69B",tags:["Custom Chips","TPU","Networking","ASIC"]},{id:"IBM",label:"IBM",type:"other-company",group:"Other",tier:"B",mcap:200,role:"Enterprise AI (WatsonX)",why:"WatsonX platform + consulting arm for Fortune 500 AI adoption.",facts:"<strong>Market cap:</strong> ~$200B<br><strong>WatsonX:</strong> Enterprise AI platform<br><strong>Granite:</strong> Open-source enterprise LLMs<br><strong>Consulting:</strong> $2B+ AI bookings",tags:["Enterprise","WatsonX","Consulting"]},{id:"Bytedance",label:"Bytedance",type:"other-company",group:"Other",tier:"A",mcap:300,role:"TikTok & Chinese AI",why:"TikTok's recommendation algorithm is arguably the best consumer AI deployment ever. Doubao models competitive.",facts:"<strong>Valuation:</strong> ~$300B (private)<br><strong>TikTok:</strong> Best recommendation algorithm<br><strong>Doubao:</strong> Competitive Chinese LLM<br><strong>NVIDIA:</strong> Major GPU customer (export limited)",tags:["China","TikTok","Recommendation"]},{id:"DeepL",label:"DeepL",type:"other-company",group:"Other",tier:"B",mcap:20,role:"AI Translation",why:"European AI success story. Quality rivals Google Translate.",facts:"<strong>Valuation:</strong> ~$20B<br><strong>Enterprise:</strong> 100K+ businesses<br><strong>HQ:</strong> Cologne, Germany",tags:["Translation","European","NLP"]},
@@ -102,7 +181,14 @@ const nodes=[{id:"NVIDIA",label:"NVIDIA",type:"s-company",group:"NVIDIA",tier:"S
 // PEOPLE
 {id:"Sam Altman",label:"Sam Altman",type:"s-person",group:"OpenAI",tier:"S",mcap:0,img:"https://upload.wikimedia.org/wikipedia/commons/thumb/9/9b/Sam_Altman_%2848381859796%29.jpg/150px-Sam_Altman_%2848381859796%29.jpg",role:"CEO, OpenAI",why:"The face of the AI revolution. Survived board coup. Positioned OpenAI as most valuable startup ever.",facts:"<strong>Board crisis:</strong> Fired Nov 17, reinstated Nov 22 — 700/770 employees threatened to quit<br><strong>Y Combinator:</strong> Former president<br><strong>Worldcoin:</strong> Also runs crypto/identity project<br><strong>Political:</strong> Testified before US Senate",tags:["CEO","OpenAI","AGI","Policy"]},{id:"Elon Musk",label:"Elon Musk",type:"s-person",group:"xAI",tier:"S",mcap:0,img:"https://upload.wikimedia.org/wikipedia/commons/thumb/e/ed/Elon_Musk_Royal_Society_%28crop2%29.jpg/150px-Elon_Musk_Royal_Society_%28crop2%29.jpg",role:"CEO xAI, Tesla, SpaceX",why:"World's richest person. Runs xAI, Tesla, SpaceX, X. OpenAI co-founder turned rival. Built largest GPU cluster.",facts:"<strong>Companies:</strong> xAI, Tesla, SpaceX, X, Neuralink<br><strong>OpenAI:</strong> Co-founded 2015, sued them 2024<br><strong>DOGE:</strong> Head of Dept of Government Efficiency<br><strong>Net worth:</strong> ~$200B+",tags:["CEO","xAI","Tesla","SpaceX","DOGE"]},{id:"Jensen Huang",label:"Jensen Huang",type:"s-person",group:"NVIDIA",tier:"S",mcap:0,img:"https://upload.wikimedia.org/wikipedia/commons/thumb/2/24/Jensen_Huang_CEO_of_Nvidia.jpg/150px-Jensen_Huang_CEO_of_Nvidia.jpg",role:"CEO & Founder, NVIDIA",why:"Built NVIDIA from gaming GPUs to most important AI company. Leather jacket icon. Predicted AI wave years early.",facts:"<strong>Founded:</strong> NVIDIA in 1993<br><strong>CUDA moat:</strong> Makes switching to AMD painful<br><strong>Lisa Su:</strong> AMD CEO is his cousin<br><strong>Background:</strong> Born Taiwan, Stanford-educated",tags:["CEO","NVIDIA","GPU","Leather Jacket"]},{id:"Satya Nadella",label:"Satya Nadella",type:"s-person",group:"Microsoft",tier:"S",mcap:0,role:"CEO, Microsoft",why:"Transformed Microsoft from Windows to AI-first. Made the OpenAI bet. Handled board crisis masterfully.",facts:"<strong>Transformation:</strong> $300B → $3T+ market cap<br><strong>Board crisis:</strong> Offered to hire entire OpenAI team<br><strong>Previous:</strong> Led Azure before CEO<br><strong>Background:</strong> Born Hyderabad, India",tags:["CEO","Microsoft","Azure"]},{id:"Demis Hassabis",label:"Demis Hassabis",type:"s-person",group:"Google",tier:"S",mcap:0,img:"https://upload.wikimedia.org/wikipedia/commons/thumb/0/0e/Demis_Hassabis_2023_%28cropped%29.jpg/150px-Demis_Hassabis_2023_%28cropped%29.jpg",role:"CEO, Google DeepMind",why:"Built DeepMind. AlphaGo changed AI perception. AlphaFold won Nobel 2024. Leads Google's AI effort.",facts:"<strong>Nobel Prize:</strong> Chemistry 2024 for AlphaFold<br><strong>Child prodigy:</strong> Chess master at 13<br><strong>DeepMind:</strong> Sold to Google for $500M (2014)<br><strong>PhD:</strong> Neuroscience, UCL",tags:["CEO","DeepMind","Nobel","AlphaFold"]},{id:"Dario Amodei",label:"Dario Amodei",type:"s-person",group:"Anthropic",tier:"S",mcap:0,role:"CEO, Anthropic",why:"Left OpenAI over safety to build Anthropic. Constitutional AI. Published 'Machines of Loving Grace'.",facts:"<strong>OpenAI:</strong> VP Research before leaving<br><strong>Constitutional AI:</strong> Pioneered alignment method<br><strong>Essay:</strong> 'Machines of Loving Grace' on positive AI futures<br><strong>PhD:</strong> Computational neuroscience, Princeton",tags:["CEO","Anthropic","Safety"]},{id:"Daniela Amodei",label:"Daniela Amodei",type:"s-person",group:"Anthropic",tier:"S",mcap:0,role:"President, Anthropic",why:"Runs business at Anthropic. Negotiated Amazon $4B and Google $2B deals.",facts:"<strong>OpenAI:</strong> VP Operations before Anthropic<br><strong>Fundraising:</strong> Led $4B Amazon + $2B Google deals<br><strong>Background:</strong> Economics, Stanford",tags:["President","Anthropic","Business"]},{id:"John Schulman",label:"John Schulman",type:"s-person",group:"Anthropic",tier:"S",mcap:0,role:"Alignment, Anthropic (ex-OpenAI)",why:"Co-founded OpenAI. Invented PPO (used in all RLHF). Moved to Anthropic 2024.",facts:"<strong>PPO:</strong> Algorithm behind ChatGPT's RLHF<br><strong>OpenAI:</strong> Co-founder<br><strong>Moved:</strong> To Anthropic Aug 2024",tags:["Research","RLHF","PPO","Alignment"]},{id:"Yann LeCun",label:"Yann LeCun",type:"s-person",group:"Meta",tier:"S",mcap:0,img:"https://upload.wikimedia.org/wikipedia/commons/thumb/9/96/Yann_LeCun_2018_%28cropped%29.jpg/150px-Yann_LeCun_2018_%28cropped%29.jpg",role:"Chief AI Scientist, Meta",why:"Godfather of AI. Turing Award 2018. Invented CNNs. Most vocal open-source advocate. Famous X debates.",facts:"<strong>Turing Award:</strong> 2018 (with Hinton, Bengio)<br><strong>CNNs:</strong> Invented Convolutional Neural Networks<br><strong>Meta FAIR:</strong> Leads research since 2013<br><strong>Hot takes:</strong> LLMs alone won't reach AGI<br><strong>JEPA:</strong> Advocates Joint Embedding architecture",tags:["Turing Award","CNN","FAIR","Open Source"]},{id:"Mark Zuckerberg",label:"Mark Zuckerberg",type:"s-person",group:"Meta",tier:"S",mcap:0,role:"CEO, Meta",why:"Bet $35B+ on AI. Open-sourced LLaMA. Personally drives Meta's AI strategy.",facts:"<strong>LLaMA:</strong> Personally decided to open-source<br><strong>GPU spend:</strong> 350K+ H100s<br><strong>Net worth:</strong> ~$200B",tags:["CEO","Meta","Open Source","LLaMA"]},{id:"Sundar Pichai",label:"Sundar Pichai",type:"s-person",group:"Google",tier:"S",mcap:0,role:"CEO, Alphabet/Google",why:"Leads the company that invented the Transformer. Managing AI vs Search revenue tension.",facts:"<strong>Challenge:</strong> AI threatens $175B search ad business<br><strong>Restructure:</strong> Merged Brain + DeepMind<br><strong>Background:</strong> IIT Kharagpur → Stanford → Wharton",tags:["CEO","Google","Alphabet"]},{id:"Jeff Dean",label:"Jeff Dean",type:"s-person",group:"Google",tier:"S",mcap:0,role:"Chief Scientist, Google DeepMind",why:"Legendary engineer. Built much of Google's infrastructure.",facts:"<strong>Built:</strong> MapReduce, BigTable, TensorFlow foundations<br><strong>Papers:</strong> 100+ publications<br><strong>Google:</strong> Employee ~20",tags:["Chief Scientist","Google","Legend"]},{id:"Lisa Su",label:"Lisa Su",type:"s-person",group:"Infra",tier:"S",mcap:0,role:"CEO, AMD",why:"Rescued AMD from bankruptcy. MI300X is first credible NVIDIA alternative.",facts:"<strong>Turnaround:</strong> Near-bankruptcy → $200B+<br><strong>Jensen's cousin:</strong> Confirmed<br><strong>PhD:</strong> MIT electrical engineering",tags:["CEO","AMD","GPU","Turnaround"]},{id:"Greg Brockman",label:"Greg Brockman",type:"s-person",group:"OpenAI",tier:"S",mcap:0,role:"President, OpenAI",why:"Technical co-founder of OpenAI.",facts:"<strong>Previous:</strong> CTO of Stripe<br><strong>Board crisis:</strong> Left briefly, returned",tags:["President","OpenAI"]},{id:"Mira Murati",label:"Mira Murati",type:"s-person",group:"OpenAI",tier:"S",mcap:0,role:"Ex-CTO, OpenAI",why:"Led GPT-4 and ChatGPT launches. Briefly interim CEO.",facts:"<strong>GPT-4:</strong> Led technical effort<br><strong>Interim CEO:</strong> During Nov 2023 crisis<br><strong>Left:</strong> September 2024",tags:["CTO","OpenAI","Departed"]},{id:"Ilya Sutskever",label:"Ilya Sutskever",type:"s-person",group:"OpenAI",tier:"S",mcap:0,role:"Founder SSI, Ex-OpenAI",why:"Most brilliant AI researcher of his generation. Triggered board crisis. Founded SSI.",facts:"<strong>Board coup:</strong> Led firing of Altman, then reversed<br><strong>AlexNet:</strong> Co-created with Hinton<br><strong>SSI:</strong> Founded 2024<br><strong>PhD:</strong> Under Hinton at Toronto",tags:["Research","SSI","AlexNet","Board Crisis"]},{id:"Mustafa Suleyman",label:"Mustafa Suleyman",type:"s-person",group:"Microsoft",tier:"S",mcap:0,role:"CEO Microsoft AI",why:"Co-founded DeepMind, then Inflection, now runs Microsoft AI. Wrote 'The Coming Wave'.",facts:"<strong>DeepMind:</strong> Co-founded 2010<br><strong>Inflection:</strong> Founded Pi chatbot<br><strong>Book:</strong> 'The Coming Wave' (2023)<br><strong>Started:</strong> Human rights activist at 19",tags:["CEO","Microsoft AI","DeepMind","Author"]},
 {id:"Andrew Ng",label:"Andrew Ng",type:"a-person",group:"Influencer",tier:"A",mcap:0,role:"DeepLearning.AI, Coursera",why:"Taught more people AI than anyone. 5M+ course enrollments. Founded Google Brain.",facts:"<strong>Coursera ML:</strong> 5M+ students<br><strong>Google Brain:</strong> Founded 2011<br><strong>Baidu:</strong> Chief Scientist 2014-17",tags:["Education","Coursera","Google Brain"]},{id:"Geoffrey Hinton",label:"Geoffrey Hinton",type:"a-person",group:"Influencer",tier:"A",mcap:0,role:"Godfather of Deep Learning",why:"Invented backprop. Nobel Physics 2024. Left Google to warn about AI risks.",facts:"<strong>Nobel:</strong> Physics 2024<br><strong>Turing Award:</strong> 2018<br><strong>AlexNet:</strong> Supervised Sutskever<br><strong>Left Google:</strong> 2023 to speak on risks",tags:["Nobel","Turing Award","Backpropagation","Safety"]},{id:"Yoshua Bengio",label:"Yoshua Bengio",type:"a-person",group:"Influencer",tier:"A",mcap:0,role:"Mila Director, AI Safety",why:"Third Godfather of AI. Most vocal on safety regulation. Leads Mila.",facts:"<strong>Turing Award:</strong> 2018<br><strong>Mila:</strong> Largest academic AI institute<br><strong>Safety:</strong> Most outspoken on regulation",tags:["Turing Award","Safety","Mila","Policy"]},{id:"Fei-Fei Li",label:"Fei-Fei Li",type:"a-person",group:"Influencer",tier:"A",mcap:0,role:"Stanford, World Labs",why:"Created ImageNet — launched deep learning revolution. Founded World Labs.",facts:"<strong>ImageNet:</strong> Proved deep learning works at scale<br><strong>World Labs:</strong> $5B spatial intelligence startup<br><strong>Book:</strong> 'The Worlds I See' (2023)",tags:["ImageNet","Stanford","World Labs"]},{id:"Andrej Karpathy",label:"Andrej Karpathy",type:"a-person",group:"Influencer",tier:"A",mcap:0,img:"https://upload.wikimedia.org/wikipedia/commons/1/14/Andrej_Karpathy_2023_%28cropped%29.jpg",role:"Independent AI Educator",why:"Left OpenAI and Tesla to become best AI educator on YouTube. 'Zero to Hero' is legendary.",facts:"<strong>Tesla:</strong> Director of AI, built FSD vision<br><strong>OpenAI:</strong> Founding team<br><strong>YouTube:</strong> Zero to Hero series<br><strong>nanoGPT:</strong> Clean implementation",tags:["Education","Tesla","OpenAI","YouTube"]},{id:"Lex Fridman",label:"Lex Fridman",type:"a-person",group:"Influencer",tier:"A",mcap:0,role:"AI Podcast",why:"Most influential AI podcast. Interviewed every major figure.",facts:"<strong>Podcast:</strong> 400+ episodes, millions per ep<br><strong>YouTube:</strong> 4M+ subscribers<br><strong>Style:</strong> Long-form, philosophical",tags:["Podcast","Interviews","MIT"]},{id:"Gary Marcus",label:"Gary Marcus",type:"a-person",group:"Influencer",tier:"A",mcap:0,role:"AI Critic",why:"Most prominent AI skeptic. Calls out hype. Debates LeCun.",facts:"<strong>Critique:</strong> LLMs = pattern matching, not reasoning<br><strong>Books:</strong> 'Rebooting AI', 'Taming Silicon Valley'<br><strong>NYU:</strong> Professor",tags:["Critic","Author","NYU"]},{id:"Stuart Russell",label:"Stuart Russell",type:"a-person",group:"Influencer",tier:"A",mcap:0,role:"AI Safety, Berkeley",why:"Wrote THE AI textbook. AI safety pioneer.",facts:"<strong>Textbook:</strong> #1 AI textbook globally<br><strong>CHAI:</strong> Center for Human-Compatible AI<br><strong>Book:</strong> 'Human Compatible' (2019)",tags:["Textbook","Safety","Berkeley"]},{id:"Aidan Gomez",label:"Aidan Gomez",type:"a-person",group:"Influencer",tier:"A",mcap:0,role:"CEO Cohere, Transformer Author",why:"Co-authored Transformer paper as intern. Built Cohere.",facts:"<strong>Transformer:</strong> Co-author of 'Attention Is All You Need'<br><strong>Cohere:</strong> Enterprise AI",tags:["Transformer","CEO","Cohere"]},{id:"Ethan Mollick",label:"Ethan Mollick",type:"a-person",group:"Influencer",tier:"A",mcap:0,role:"Wharton, AI Adoption",why:"Most practical voice on using AI at work. 'Co-Intelligence' bestseller.",facts:"<strong>Book:</strong> 'Co-Intelligence' (2024)<br><strong>Newsletter:</strong> 'One Useful Thing'",tags:["Education","Wharton","Author"]},{id:"Allie K. Miller",label:"Allie K. Miller",type:"a-person",group:"Influencer",tier:"A",mcap:0,role:"AI Advisor",why:"Top AI voice on LinkedIn. Ex-Amazon AI.",facts:"<strong>Amazon:</strong> Former ML head for startups<br><strong>LinkedIn:</strong> Most followed AI voice",tags:["LinkedIn","Business AI"]},{id:"Cassie Kozyrkov",label:"Cassie Kozyrkov",type:"a-person",group:"Influencer",tier:"A",mcap:0,role:"Ex-Google Decision Scientist",why:"Pioneered Decision Intelligence at Google.",facts:"<strong>Google:</strong> First Chief Decision Scientist",tags:["Decision Science","Google"]},{id:"Bernard Marr",label:"Bernard Marr",type:"a-person",group:"Influencer",tier:"A",mcap:0,role:"AI Futurist & Author",why:"Prolific AI author. Forbes contributor.",facts:"<strong>Books:</strong> 20+ bestsellers<br><strong>Forbes:</strong> Regular contributor",tags:["Author","Futurist","Forbes"]},{id:"Rowan Cheung",label:"Rowan Cheung",type:"a-person",group:"Influencer",tier:"A",mcap:0,role:"The Rundown AI",why:"600K+ subscriber AI newsletter.",facts:"<strong>The Rundown AI:</strong> 600K+ subscribers",tags:["Newsletter","Media"]},{id:"Grant Sanderson",label:"Grant Sanderson",type:"a-person",group:"Influencer",tier:"A",mcap:0,role:"3Blue1Brown",why:"Best math/ML visualizations on YouTube. 6M+ subscribers.",facts:"<strong>3B1B:</strong> 6M+ subscribers<br><strong>Manim:</strong> Created animation library<br><strong>Neural nets:</strong> Best visual explainers",tags:["YouTube","Math","Visualization"]},{id:"Wojciech Zaremba",label:"Wojciech Zaremba",type:"s-person",group:"OpenAI",tier:"A",mcap:0,role:"Co-founder, OpenAI",why:"Original OpenAI co-founder.",facts:"<strong>Focus:</strong> Code generation, robotics",tags:["Co-founder","OpenAI"]},
-{id:"Kai-Fu Lee",label:"Kai-Fu Lee",type:"bc-person",group:"BC",tier:"B",mcap:0,role:"01.AI, Sinovation",why:"US-China AI bridge. 01.AI Yi models.",facts:"<strong>01.AI:</strong> Yi models<br><strong>Book:</strong> 'AI Superpowers'<br><strong>Career:</strong> Apple→Microsoft→Google China",tags:["China","01.AI","Author"]},{id:"Tim Cook",label:"Tim Cook",type:"bc-person",group:"BC",tier:"B",mcap:0,role:"CEO, Apple",why:"Leads world's most valuable company. Apple Intelligence.",facts:"<strong>Apple Intelligence:</strong> Launched 2024<br><strong>OpenAI deal:</strong> ChatGPT in Siri",tags:["CEO","Apple","Privacy"]},{id:"Alexandr Wang",label:"Alexandr Wang",type:"bc-person",group:"BC",tier:"B",mcap:0,role:"CEO, Scale AI",why:"Built leading AI data company at 19. Youngest billionaire.",facts:"<strong>Founded:</strong> Scale AI at age 19<br><strong>Clients:</strong> OpenAI, Meta, DoD",tags:["CEO","Scale AI","Data"]},{id:"Francois Chollet",label:"Francois Chollet",type:"bc-person",group:"BC",tier:"B",mcap:0,role:"Keras Creator, ARC",why:"Built Keras. Created ARC benchmark testing true AI understanding.",facts:"<strong>Keras:</strong> Most popular deep learning API<br><strong>ARC:</strong> Tests genuine intelligence<br><strong>Paper:</strong> 'On the Measure of Intelligence'",tags:["Keras","ARC","Philosophy"]},{id:"Jeremy Howard",label:"Jeremy Howard",type:"bc-person",group:"BC",tier:"B",mcap:0,role:"fast.ai",why:"Democratized deep learning. ULMFiT pioneered transfer learning.",facts:"<strong>fast.ai:</strong> Free DL courses<br><strong>ULMFiT:</strong> Before BERT/GPT<br><strong>Kaggle:</strong> Former #1",tags:["Education","fast.ai","Transfer Learning"]},{id:"Arvind Krishna",label:"Arvind Krishna",type:"bc-person",group:"BC",tier:"B",mcap:0,role:"CEO, IBM",why:"Pivoting IBM to AI.",facts:"<strong>WatsonX:</strong> Enterprise platform",tags:["CEO","IBM"]},{id:"John Carmack",label:"John Carmack",type:"bc-person",group:"BC",tier:"B",mcap:0,role:"Game Legend → AGI",why:"Created Doom/Quake. Left Meta to pursue AGI.",facts:"<strong>Games:</strong> Doom, Quake<br><strong>Oculus:</strong> Former CTO<br><strong>Now:</strong> Working on AGI independently",tags:["Gaming","AGI","Programming"]},{id:"Chip Huyen",label:"Chip Huyen",type:"bc-person",group:"BC",tier:"B",mcap:0,role:"MLOps Author",why:"Wrote the handbook for ML engineering.",facts:"<strong>Book:</strong> 'Designing ML Systems'<br><strong>Stanford:</strong> CS instructor",tags:["MLOps","Author","Stanford"]},{id:"Timnit Gebru",label:"Timnit Gebru",type:"bc-person",group:"BC",tier:"B",mcap:0,role:"AI Ethics, DAIR",why:"Fired from Google over AI ethics paper. Founded DAIR Institute.",facts:"<strong>Google:</strong> Fired 2020 over LLM risk paper<br><strong>DAIR:</strong> Independent research institute<br><strong>Paper:</strong> 'Stochastic Parrots'",tags:["Ethics","DAIR","Bias"]},{id:"Kate Crawford",label:"Kate Crawford",type:"bc-person",group:"BC",tier:"B",mcap:0,role:"AI & Power Researcher",why:"'Atlas of AI' maps AI's hidden costs.",facts:"<strong>Book:</strong> 'Atlas of AI'<br><strong>Microsoft Research:</strong> Senior researcher",tags:["Ethics","Author","Society"]}];
+{id:"Kai-Fu Lee",label:"Kai-Fu Lee",type:"bc-person",group:"BC",tier:"B",mcap:0,role:"01.AI, Sinovation",why:"US-China AI bridge. 01.AI Yi models.",facts:"<strong>01.AI:</strong> Yi models<br><strong>Book:</strong> 'AI Superpowers'<br><strong>Career:</strong> Apple→Microsoft→Google China",tags:["China","01.AI","Author"]},{id:"Tim Cook",label:"Tim Cook",type:"bc-person",group:"BC",tier:"B",mcap:0,role:"CEO, Apple",why:"Leads world's most valuable company. Apple Intelligence.",facts:"<strong>Apple Intelligence:</strong> Launched 2024<br><strong>OpenAI deal:</strong> ChatGPT in Siri",tags:["CEO","Apple","Privacy"]},{id:"Alexandr Wang",label:"Alexandr Wang",type:"bc-person",group:"BC",tier:"B",mcap:0,role:"CEO, Scale AI",why:"Built leading AI data company at 19. Youngest billionaire.",facts:"<strong>Founded:</strong> Scale AI at age 19<br><strong>Clients:</strong> OpenAI, Meta, DoD",tags:["CEO","Scale AI","Data"]},{id:"Francois Chollet",label:"Francois Chollet",type:"bc-person",group:"BC",tier:"B",mcap:0,role:"Keras Creator, ARC",why:"Built Keras. Created ARC benchmark testing true AI understanding.",facts:"<strong>Keras:</strong> Most popular deep learning API<br><strong>ARC:</strong> Tests genuine intelligence<br><strong>Paper:</strong> 'On the Measure of Intelligence'",tags:["Keras","ARC","Philosophy"]},{id:"Jeremy Howard",label:"Jeremy Howard",type:"bc-person",group:"BC",tier:"B",mcap:0,role:"fast.ai",why:"Democratized deep learning. ULMFiT pioneered transfer learning.",facts:"<strong>fast.ai:</strong> Free DL courses<br><strong>ULMFiT:</strong> Before BERT/GPT<br><strong>Kaggle:</strong> Former #1",tags:["Education","fast.ai","Transfer Learning"]},{id:"Arvind Krishna",label:"Arvind Krishna",type:"bc-person",group:"BC",tier:"B",mcap:0,role:"CEO, IBM",why:"Pivoting IBM to AI.",facts:"<strong>WatsonX:</strong> Enterprise platform",tags:["CEO","IBM"]},{id:"John Carmack",label:"John Carmack",type:"bc-person",group:"BC",tier:"B",mcap:0,role:"Game Legend → AGI",why:"Created Doom/Quake. Left Meta to pursue AGI.",facts:"<strong>Games:</strong> Doom, Quake<br><strong>Oculus:</strong> Former CTO<br><strong>Now:</strong> Working on AGI independently",tags:["Gaming","AGI","Programming"]},{id:"Chip Huyen",label:"Chip Huyen",type:"bc-person",group:"BC",tier:"B",mcap:0,role:"MLOps Author",why:"Wrote the handbook for ML engineering.",facts:"<strong>Book:</strong> 'Designing ML Systems'<br><strong>Stanford:</strong> CS instructor",tags:["MLOps","Author","Stanford"]},{id:"Timnit Gebru",label:"Timnit Gebru",type:"bc-person",group:"BC",tier:"B",mcap:0,role:"AI Ethics, DAIR",why:"Fired from Google over AI ethics paper. Founded DAIR Institute.",facts:"<strong>Google:</strong> Fired 2020 over LLM risk paper<br><strong>DAIR:</strong> Independent research institute<br><strong>Paper:</strong> 'Stochastic Parrots'",tags:["Ethics","DAIR","Bias"]},{id:"Kate Crawford",label:"Kate Crawford",type:"bc-person",group:"BC",tier:"B",mcap:0,role:"AI & Power Researcher",why:"'Atlas of AI' maps AI's hidden costs.",facts:"<strong>Book:</strong> 'Atlas of AI'<br><strong>Microsoft Research:</strong> Senior researcher",tags:["Ethics","Author","Society"]},
+{id:"Stanford AI",label:"Stanford AI Lab",type:"university",group:"Academia",tier:"S",mcap:0,role:"Premier AI Research University",why:"Birthplace of many AI pioneers. Fei-Fei Li created ImageNet here. Andrew Ng founded Google Brain from Stanford. Andrej Karpathy got his PhD here.",facts:"<strong>Key faculty:</strong> Fei-Fei Li, Andrew Ng (former), Percy Liang<br><strong>ImageNet:</strong> Created by Fei-Fei Li — sparked deep learning revolution<br><strong>HAI:</strong> Human-Centered AI Institute<br><strong>Alumni at:</strong> OpenAI, Google Brain, Tesla, World Labs",tags:["Stanford","Research","USA","ImageNet","HAI"]},
+{id:"Toronto Vector",label:"U of Toronto / Vector",type:"university",group:"Academia",tier:"S",mcap:0,role:"Birthplace of Deep Learning",why:"Geoffrey Hinton's home lab. AlexNet (2012) was trained here and won ImageNet, igniting the deep learning revolution. Ilya Sutskever's PhD institution.",facts:"<strong>Hinton:</strong> Professor emeritus until 2023<br><strong>AlexNet 2012:</strong> Won ImageNet, sparked deep learning era<br><strong>Sutskever:</strong> PhD student under Hinton<br><strong>Vector Institute:</strong> Applied AI spinout (2017)",tags:["Toronto","Hinton","AlexNet","Deep Learning","Canada"]},
+{id:"Mila",label:"Mila / U de Montréal",type:"university",group:"Academia",tier:"S",mcap:0,role:"Largest Academic Deep Learning Lab",why:"Yoshua Bengio's institute. 700+ researchers. Major source of AI talent for Google, Meta, OpenAI, Anthropic.",facts:"<strong>Director:</strong> Yoshua Bengio<br><strong>Size:</strong> 700+ researchers<br><strong>Research:</strong> NLP, generative models, RL, AI safety<br><strong>Alumni at:</strong> Google Brain, Meta FAIR, OpenAI, Anthropic",tags:["Mila","Bengio","Canada","Montréal","NLP","Safety"]},
+{id:"Berkeley AI",label:"UC Berkeley AI",type:"university",group:"Academia",tier:"S",mcap:0,role:"BAIR & CHAI Safety Research",why:"Home of Berkeley AI Research (BAIR) and Stuart Russell's Center for Human-Compatible AI (CHAI). John Schulman (PPO/RLHF inventor) got his PhD here.",facts:"<strong>CHAI:</strong> Stuart Russell's human-compatible AI safety lab<br><strong>BAIR:</strong> Robotics, RL, NLP research<br><strong>PPO:</strong> John Schulman PhD under Pieter Abbeel<br><strong>Companies spun out:</strong> Covariant, many others",tags:["Berkeley","Safety","CHAI","BAIR","USA","RL"]},
+{id:"MIT CSAIL",label:"MIT CSAIL",type:"university",group:"Academia",tier:"A",mcap:0,role:"MIT Computer Science & AI Lab",why:"Top robotics and AI systems research. Lisa Su (AMD CEO) got her PhD in EE here. Major contributor to robotics, NLP, and theoretical ML.",facts:"<strong>Lisa Su:</strong> PhD Electrical Engineering<br><strong>Research:</strong> Robotics, computer vision, systems<br><strong>Key labs:</strong> Daniela Rus (robotics), Josh Tenenbaum (cognitive AI)<br><strong>Alumni:</strong> Leaders across all major AI companies",tags:["MIT","Robotics","USA","Systems","EE"]},
+{id:"Oxford FHI",label:"Oxford / FHI",type:"university",group:"Academia",tier:"A",mcap:0,role:"AI Safety Philosophy (Bostrom)",why:"Nick Bostrom's Future of Humanity Institute (FHI) shaped the AGI risk debate. 'Superintelligence' (2014) influenced Musk, Gates, and the entire safety movement. FHI closed April 2024.",facts:"<strong>Nick Bostrom:</strong> 'Superintelligence' (2014)<br><strong>Influence:</strong> Shaped AGI risk discourse globally<br><strong>Alumni:</strong> Toby Ord, William MacAskill (EA movement)<br><strong>FHI closed:</strong> April 2024 amid Oxford administrative issues",tags:["Oxford","Safety","UK","Philosophy","AGI Risk","FHI"]}
+];
 
 const links=[
 {source:"Sam Altman",target:"OpenAI",type:"leads",label:"CEO"},{source:"Elon Musk",target:"xAI",type:"leads",label:"CEO"},{source:"Elon Musk",target:"Tesla",type:"leads",label:"CEO"},{source:"Demis Hassabis",target:"DeepMind",type:"leads",label:"CEO"},{source:"Jensen Huang",target:"NVIDIA",type:"leads",label:"CEO"},{source:"Satya Nadella",target:"Microsoft",type:"leads",label:"CEO"},{source:"Yann LeCun",target:"Meta",type:"leads",label:"Chief AI Scientist"},{source:"Mark Zuckerberg",target:"Meta",type:"leads",label:"CEO"},{source:"Sundar Pichai",target:"Alphabet",type:"leads",label:"CEO"},{source:"Lisa Su",target:"AMD",type:"leads",label:"CEO"},{source:"Alexandr Wang",target:"ScaleAI",type:"leads",label:"CEO"},{source:"Aidan Gomez",target:"Cohere",type:"leads",label:"CEO"},{source:"Jeff Dean",target:"Alphabet",type:"leads",label:"Chief Scientist"},{source:"Tim Cook",target:"Apple",type:"leads",label:"CEO"},{source:"Arvind Krishna",target:"IBM",type:"leads",label:"CEO"},{source:"Fei-Fei Li",target:"World Labs",type:"leads",label:"Founder"},{source:"Ilya Sutskever",target:"SSI",type:"leads",label:"Founder"},
@@ -110,10 +196,148 @@ const links=[
 {source:"NVIDIA",target:"OpenAI",type:"compute",label:"H100/B200 GPUs"},{source:"NVIDIA",target:"xAI",type:"compute",label:"100K+ H100s"},{source:"NVIDIA",target:"Anthropic",type:"compute",label:"GPUs"},{source:"NVIDIA",target:"DeepMind",type:"compute",label:"GPUs"},{source:"NVIDIA",target:"Meta",type:"compute",label:"350K+ H100s"},{source:"NVIDIA",target:"Mistral",type:"compute",label:"GPUs"},{source:"NVIDIA",target:"Tesla",type:"compute",label:"FSD training"},{source:"NVIDIA",target:"Bytedance",type:"compute",label:"GPUs (export limited)"},{source:"NVIDIA",target:"Databricks",type:"compute",label:"GPUs"},{source:"TSMC",target:"NVIDIA",type:"compute",label:"Fabs ALL GPU chips"},{source:"TSMC",target:"AMD",type:"compute",label:"Fabs MI300X"},{source:"TSMC",target:"Apple",type:"compute",label:"Fabs M/A-series"},{source:"TSMC",target:"Broadcom",type:"compute",label:"Fabs custom ASICs"},{source:"AMD",target:"Microsoft",type:"compute",label:"MI300X for Azure"},{source:"AMD",target:"Meta",type:"compute",label:"MI300X diversifying"},{source:"Broadcom",target:"Alphabet",type:"compute",label:"Co-designs Google TPUs"},
 {source:"OpenAI",target:"Anthropic",type:"talent",label:"Dario+Daniela+John+team"},{source:"OpenAI",target:"SSI",type:"talent",label:"Ilya Sutskever"},{source:"Inflection",target:"Microsoft",type:"talent",label:"Suleyman+team"},{source:"OpenAI",target:"Andrej Karpathy",type:"talent",label:"Departed"},{source:"Andrej Karpathy",target:"Tesla",type:"talent",label:"Ex-AI Director"},{source:"CharacterAI",target:"Alphabet",type:"talent",label:"Noam Shazeer returned"},{source:"Adept",target:"Amazon",type:"talent",label:"Team acqui-hired"},{source:"DeepMind",target:"xAI",type:"talent",label:"Researchers hired"},
 {source:"Meta",target:"HuggingFace",type:"partnership",label:"LLaMA hosting"},{source:"Apple",target:"OpenAI",type:"partnership",label:"ChatGPT in Siri/iOS"},{source:"Microsoft",target:"Mistral",type:"partnership",label:"Azure partnership"},{source:"NVIDIA",target:"Databricks",type:"partnership",label:"AI infrastructure"},{source:"Amazon",target:"Cohere",type:"partnership",label:"Bedrock partner"},{source:"Palantir",target:"OpenAI",type:"partnership",label:"AIP integration"},{source:"Palantir",target:"Anthropic",type:"partnership",label:"AIP integration"},{source:"Alphabet",target:"HuggingFace",type:"partnership",label:"Cloud partnership"},
-{source:"ScaleAI",target:"OpenAI",type:"product",label:"Training data"},{source:"ScaleAI",target:"Meta",type:"product",label:"Training data"},{source:"Perplexity",target:"Alphabet",type:"product",label:"Disrupting Search"},{source:"Cursor",target:"Microsoft",type:"product",label:"Challenging Copilot"}];
+{source:"ScaleAI",target:"OpenAI",type:"product",label:"Training data"},{source:"ScaleAI",target:"Meta",type:"product",label:"Training data"},{source:"Perplexity",target:"Alphabet",type:"product",label:"Disrupting Search"},{source:"Cursor",target:"Microsoft",type:"product",label:"Challenging Copilot"},
+{source:"Stanford AI",target:"Andrew Ng",type:"academic",label:"Professor — founded Google Brain"},
+{source:"Stanford AI",target:"Fei-Fei Li",type:"academic",label:"Professor, created ImageNet"},
+{source:"Stanford AI",target:"Andrej Karpathy",type:"academic",label:"PhD 2015 under Fei-Fei Li"},
+{source:"Toronto Vector",target:"Geoffrey Hinton",type:"academic",label:"Professor emeritus"},
+{source:"Toronto Vector",target:"Ilya Sutskever",type:"academic",label:"PhD student — AlexNet"},
+{source:"Mila",target:"Yoshua Bengio",type:"academic",label:"Director & co-founder"},
+{source:"Berkeley AI",target:"Stuart Russell",type:"academic",label:"Professor, founded CHAI"},
+{source:"Berkeley AI",target:"John Schulman",type:"academic",label:"PhD — invented PPO/RLHF"},
+{source:"MIT CSAIL",target:"Lisa Su",type:"academic",label:"PhD Electrical Engineering"},
+{source:"Oxford FHI",target:"Yoshua Bengio",type:"academic",label:"Safety collaboration"},
+{source:"Geoffrey Hinton",target:"Ilya Sutskever",type:"mentored",label:"PhD supervisor — AlexNet"},
+{source:"Geoffrey Hinton",target:"Yann LeCun",type:"mentored",label:"Colleague & co-Turing Award"},
+{source:"Fei-Fei Li",target:"Andrej Karpathy",type:"mentored",label:"PhD supervisor"},
+{source:"Andrew Ng",target:"Andrej Karpathy",type:"mentored",label:"Stanford AI mentor"},
+{source:"Stanford AI",target:"OpenAI",type:"academic",label:"Many founding team"},
+{source:"Stanford AI",target:"DeepMind",type:"academic",label:"Key researchers"},
+{source:"Toronto Vector",target:"OpenAI",type:"academic",label:"Sutskever co-founded"},
+{source:"Mila",target:"Meta",type:"academic",label:"LeCun + FAIR researchers"},
+{source:"Berkeley AI",target:"OpenAI",type:"academic",label:"Schulman co-founded RLHF"}
+];
 
-const typeColors={"s-company":"#ff6b35","startup":"#f5a623","other-company":"#b537f2","s-person":"#4fc3f7","a-person":"#4fc3f7","bc-person":"#81c784"};
-const edgeColors={"leads":"#555","funding":"#4a90d9","compute":"#66bb6a","talent":"#ef5350","partnership":"#ce93d8","product":"#ffb74d"};
+const typeColors={"s-company":"#ff6b35","startup":"#f5a623","other-company":"#b537f2","s-person":"#4fc3f7","a-person":"#4fc3f7","bc-person":"#81c784","university":"#22d3ee"};
+const edgeColors={"leads":"#555","funding":"#4a90d9","compute":"#66bb6a","talent":"#ef5350","partnership":"#ce93d8","product":"#ffb74d","academic":"#fbbf24","mentored":"#f472b6"};
+
+const newsData={
+  "NVIDIA":[
+    {title:"H200 GPU launched — 2x faster than H100 for AI inference",source:"NVIDIA Blog",date:"Nov 2023",tag:"Product"},
+    {title:"Blackwell B200 GPU announced at GTC 2024 — up to 20 PFLOPS",source:"NVIDIA GTC",date:"Mar 2024",tag:"Launch"},
+    {title:"NVIDIA hits $3 trillion market cap, briefly surpassing Microsoft",source:"Reuters",date:"Jun 2024",tag:"Market"},
+    {title:"GB200 NVL72 rack system announced — 720 B200 GPUs in one system",source:"NVIDIA GTC",date:"Mar 2024",tag:"Hardware"}
+  ],
+  "OpenAI":[
+    {title:"Sam Altman fired and rehired in 5-day board crisis — Ilya Sutskever involved",source:"The Verge",date:"Nov 2023",tag:"Corporate"},
+    {title:"GPT-4o announced — free, multimodal, 2x faster than GPT-4 Turbo",source:"OpenAI Blog",date:"May 2024",tag:"Product"},
+    {title:"OpenAI reaches 200 million weekly active users",source:"Reuters",date:"Aug 2024",tag:"Growth"},
+    {title:"o1 reasoning model released — passes PhD-level science benchmarks",source:"OpenAI Blog",date:"Sep 2024",tag:"Research"},
+    {title:"OpenAI valued at $157 billion in latest funding round",source:"WSJ",date:"Oct 2024",tag:"Funding"}
+  ],
+  "Anthropic":[
+    {title:"Claude 3 Opus surpasses GPT-4 on most benchmarks",source:"Anthropic Blog",date:"Mar 2024",tag:"Product"},
+    {title:"Claude 3.5 Sonnet released — best coding model available",source:"Anthropic Blog",date:"Jun 2024",tag:"Product"},
+    {title:"Amazon invests $4 billion in Anthropic, becomes primary cloud partner",source:"Bloomberg",date:"Mar 2024",tag:"Funding"},
+    {title:"Anthropic valued at $18.4 billion after funding rounds",source:"Financial Times",date:"2024",tag:"Valuation"}
+  ],
+  "Microsoft":[
+    {title:"Microsoft announces $10 billion OpenAI investment, exclusive Azure deal",source:"Bloomberg",date:"Jan 2023",tag:"Funding"},
+    {title:"Microsoft 365 Copilot reaches 1 million paid seats",source:"Microsoft Blog",date:"Mar 2024",tag:"Growth"},
+    {title:"GitHub Copilot surpasses 1.3 million paid developer subscribers",source:"GitHub",date:"2024",tag:"Product"},
+    {title:"Microsoft integrates Copilot across all Office apps and Windows 11",source:"The Verge",date:"2024",tag:"Product"}
+  ],
+  "Meta":[
+    {title:"LLaMA 3 released — open weights, outperforms Gemini Pro on many tasks",source:"Meta AI",date:"Apr 2024",tag:"Research"},
+    {title:"Meta commits $40 billion in AI capex for 2024",source:"Meta Earnings",date:"Feb 2024",tag:"Investment"},
+    {title:"Meta AI assistant integrated into WhatsApp, Instagram, Messenger",source:"Meta Blog",date:"Apr 2024",tag:"Product"},
+    {title:"LLaMA 3.1 405B released — largest open-weights frontier model",source:"Meta AI",date:"Jul 2024",tag:"Research"}
+  ],
+  "Alphabet":[
+    {title:"Gemini 1.5 Pro achieves 1 million token context window",source:"Google DeepMind",date:"Feb 2024",tag:"Research"},
+    {title:"Google I/O 2024: AI overviews in Search, Gemini across all products",source:"Google Blog",date:"May 2024",tag:"Product"},
+    {title:"Gemini 1.0 Ultra released — beats GPT-4 on MMLU benchmark",source:"Google DeepMind",date:"Dec 2023",tag:"Product"},
+    {title:"Google announces Project Astra — universal AI agent prototype",source:"Google I/O",date:"May 2024",tag:"Research"}
+  ],
+  "DeepMind":[
+    {title:"AlphaFold 3 released — predicts structures of all molecules, not just proteins",source:"Nature",date:"May 2024",tag:"Science"},
+    {title:"Demis Hassabis wins Nobel Prize in Chemistry for AlphaFold",source:"Nobel Prize",date:"Oct 2024",tag:"Award"},
+    {title:"Google DeepMind merges Google Brain to form unified lab",source:"Google",date:"Apr 2023",tag:"Corporate"},
+    {title:"Gemini model series development led by DeepMind team",source:"Google DeepMind",date:"Dec 2023",tag:"Product"}
+  ],
+  "xAI":[
+    {title:"xAI raises $6 billion Series B at $24 billion valuation",source:"Bloomberg",date:"May 2024",tag:"Funding"},
+    {title:"Grok 1.5 Vision released — multimodal capabilities added",source:"xAI Blog",date:"Apr 2024",tag:"Product"},
+    {title:"Colossus: xAI builds 100,000 H100 GPU cluster in Memphis in 122 days",source:"xAI Blog",date:"Jul 2024",tag:"Infrastructure"},
+    {title:"xAI announces $6 billion in new funding, targets Colossus 2.0",source:"Reuters",date:"2024",tag:"Funding"}
+  ],
+  "Geoffrey Hinton":[
+    {title:"Geoffrey Hinton leaves Google to speak freely about AI risks",source:"NYT",date:"May 2023",tag:"Career"},
+    {title:"Hinton warns AI could surpass human intelligence within 5-20 years",source:"BBC",date:"Oct 2023",tag:"Safety"},
+    {title:"Geoffrey Hinton wins Nobel Prize in Physics for neural network foundations",source:"Nobel Prize",date:"Oct 2024",tag:"Award"},
+    {title:"Hinton calls for international AI safety treaty similar to nuclear agreements",source:"Guardian",date:"2024",tag:"Policy"}
+  ],
+  "Ilya Sutskever":[
+    {title:"Ilya Sutskever initiates board coup that briefly ousts Sam Altman",source:"The Verge",date:"Nov 2023",tag:"Corporate"},
+    {title:"Ilya Sutskever announces departure from OpenAI after 8 years",source:"Twitter/X",date:"May 2024",tag:"Career"},
+    {title:"Safe Superintelligence Inc. (SSI) raises $1 billion at $5B valuation",source:"Bloomberg",date:"Sep 2024",tag:"Funding"},
+    {title:"SSI founded with mission of building safe superintelligence as only goal",source:"SSI Blog",date:"Jun 2024",tag:"Launch"}
+  ],
+  "Sam Altman":[
+    {title:"Sam Altman fired and reinstated as OpenAI CEO in 5-day crisis",source:"The Verge",date:"Nov 2023",tag:"Corporate"},
+    {title:"Altman seeks $7 trillion for global AI chip manufacturing network",source:"WSJ",date:"Feb 2024",tag:"Vision"},
+    {title:"Altman says AGI may arrive within 4 years in Harvard interview",source:"Harvard Gazette",date:"Jun 2024",tag:"AGI"},
+    {title:"OpenAI closes $6.6 billion funding round at $157B valuation under Altman",source:"Reuters",date:"Oct 2024",tag:"Funding"}
+  ],
+  "Yoshua Bengio":[
+    {title:"Bengio signs open letter calling for 6-month pause on giant AI experiments",source:"FLI",date:"Mar 2023",tag:"Safety"},
+    {title:"Bengio tells BBC he regrets his life's work if AI leads to catastrophe",source:"BBC",date:"May 2023",tag:"Safety"},
+    {title:"Mila announces $200 million in new funding for AI safety research",source:"Mila Blog",date:"Apr 2024",tag:"Funding"},
+    {title:"Bengio calls for international AI safety agency at UN summit",source:"Reuters",date:"2024",tag:"Policy"}
+  ],
+  "Yann LeCun":[
+    {title:"LeCun argues LLMs will never achieve human-level intelligence or AGI",source:"Twitter/X",date:"Jan 2024",tag:"Research"},
+    {title:"LeCun publishes V-JEPA paper — video joint embedding predictive architecture",source:"Meta AI",date:"Jun 2024",tag:"Research"},
+    {title:"LeCun debates Altman and Hinton on AGI path at public events",source:"Various",date:"2024",tag:"Debate"},
+    {title:"Meta releases LLaMA 3 under LeCun's open-source AI philosophy",source:"Meta AI",date:"Apr 2024",tag:"Product"}
+  ],
+  "Andrej Karpathy":[
+    {title:"Neural Networks: Zero to Hero series launches on YouTube",source:"YouTube",date:"Jan 2023",tag:"Education"},
+    {title:"Andrej Karpathy announces departure from OpenAI",source:"Twitter/X",date:"Feb 2024",tag:"Career"},
+    {title:"Karpathy coins 'vibe coding' — using LLMs to generate code without reading it",source:"Twitter/X",date:"Feb 2025",tag:"Concept"},
+    {title:"Karpathy launches Eureka Labs — AI native education company",source:"Eureka Labs",date:"Jul 2024",tag:"Startup"}
+  ],
+  "Fei-Fei Li":[
+    {title:"World Labs raises $230 million seed round for spatial intelligence AI",source:"Bloomberg",date:"Sep 2024",tag:"Funding"},
+    {title:"Fei-Fei Li launches World Labs to build AI that understands 3D worlds",source:"World Labs",date:"Sep 2024",tag:"Startup"},
+    {title:"Li publishes autobiography 'The Worlds I See' about her journey in AI",source:"Flatiron Books",date:"Nov 2023",tag:"Book"},
+    {title:"Stanford HAI releases 2024 AI Index Report — comprehensive AI trends",source:"Stanford HAI",date:"Apr 2024",tag:"Research"}
+  ],
+  "Stanford AI":[
+    {title:"Stanford AI Index 2024 Report: AI investment, talent, and capabilities surge",source:"Stanford HAI",date:"Apr 2024",tag:"Research"},
+    {title:"World Labs spin-out by Fei-Fei Li raises $230M from Stanford connections",source:"Bloomberg",date:"Sep 2024",tag:"Spinout"},
+    {title:"Stanford HAI releases report on generative AI's economic impact",source:"Stanford HAI",date:"Mar 2024",tag:"Research"},
+    {title:"Stanford ranked #1 for AI research output globally for 5th consecutive year",source:"Times Higher Ed",date:"2024",tag:"Rankings"}
+  ],
+  "Toronto Vector":[
+    {title:"Geoffrey Hinton (Toronto emeritus) wins Nobel Prize in Physics",source:"Nobel Prize",date:"Oct 2024",tag:"Award"},
+    {title:"Vector Institute celebrates 7 years — 700+ researchers, 40+ industry partners",source:"Vector Institute",date:"Mar 2024",tag:"Milestone"},
+    {title:"Vector Institute releases annual report on Canadian AI ecosystem growth",source:"Vector Institute",date:"2024",tag:"Report"},
+    {title:"AlexNet anniversary: 12 years since ImageNet win that changed AI",source:"Various",date:"Oct 2024",tag:"History"}
+  ],
+  "Mila":[
+    {title:"Mila named largest academic AI research institute in the world",source:"Times Higher Ed",date:"Jan 2024",tag:"Recognition"},
+    {title:"Mila alumni leading AI safety teams at OpenAI, Anthropic, Google",source:"Mila Blog",date:"Jun 2023",tag:"Impact"},
+    {title:"Mila receives $200 million in new government and private funding",source:"Mila Blog",date:"Apr 2024",tag:"Funding"},
+    {title:"Bengio leads Mila delegation to AI Safety Summit at Bletchley Park",source:"Reuters",date:"Nov 2023",tag:"Policy"}
+  ],
+  "Berkeley AI":[
+    {title:"Stuart Russell publishes alignment paper on provably beneficial AI systems",source:"CHAI Berkeley",date:"Jul 2024",tag:"Research"},
+    {title:"Berkeley BAIR lab receives $50M DARPA grant for AI robotics research",source:"Berkeley News",date:"Feb 2024",tag:"Funding"},
+    {title:"John Schulman's PPO algorithm now standard for RLHF in all major LLMs",source:"CHAI",date:"2024",tag:"Impact"},
+    {title:"UC Berkeley launches Center for AI Safety as standalone research unit",source:"Berkeley News",date:"2023",tag:"Launch"}
+  ]
+};
 
 function nodeRadius(d){if(d.mcap>0){const b=Math.sqrt(d.mcap)*0.55;return Math.max(8,Math.min(b,42));}if(d.tier==="S")return 16;if(d.tier==="A")return 11;return 8;}
 
@@ -130,7 +354,7 @@ const zoom=d3.zoom().scaleExtent([0.1,5]).on("zoom",e=>g.attr("transform",e.tran
 svg.call(zoom);
 
 const simulation=d3.forceSimulation(nodes)
-.force("link",d3.forceLink(links).id(d=>d.id).distance(d=>{if(d.type==="leads")return 50;if(d.type==="compute"||d.type==="funding")return 180;return 140;}).strength(d=>d.type==="leads"?1.5:0.3))
+.force("link",d3.forceLink(links).id(d=>d.id).distance(d=>{if(d.type==="leads")return 50;if(d.type==="compute"||d.type==="funding")return 180;if(d.type==="academic"||d.type==="mentored")return 160;return 140;}).strength(d=>d.type==="leads"?1.5:d.type==="academic"||d.type==="mentored"?0.2:0.3))
 .force("charge",d3.forceManyBody().strength(d=>-nodeRadius(d)*25))
 .force("center",d3.forceCenter(width/2,height/2))
 .force("collision",d3.forceCollide().radius(d=>nodeRadius(d)+6))
@@ -141,7 +365,7 @@ const link=g.append("g").selectAll("line").data(links).join("line")
 .attr("stroke",d=>edgeColors[d.type]||"#444")
 .attr("stroke-width",d=>(d.type==="funding"||d.type==="compute")?1.5:0.8)
 .attr("stroke-opacity",0.25)
-.attr("stroke-dasharray",d=>d.type==="talent"?"5,3":d.type==="product"?"2,2":"none")
+.attr("stroke-dasharray",d=>d.type==="talent"?"5,3":d.type==="product"?"2,2":d.type==="mentored"?"3,2":"none")
 .attr("marker-end",d=>"url(#arr-"+d.type+")");
 
 const linkLabel=g.append("g").selectAll("text").data(links).join("text")
@@ -176,7 +400,7 @@ const labels=node.append("text").text(d=>d.label).attr("text-anchor","middle")
 
 const tooltip=d3.select("#tooltip");
 node.on("mouseover",function(event,d){
-tooltip.style("display","block").html('<div class="tt-name">'+d.label+'</div><div class="tt-sub">'+d.role+'</div><div class="tt-click">▸ Click for full details</div>');
+tooltip.style("display","block").html('<div class="tt-name">'+d.label+'</div><div class="tt-sub">'+d.role+'</div><div class="tt-click">&#9658; Click for full details</div>');
 d3.select(this).select("circle").transition().duration(150).attr("r",nodeRadius(d)*1.15).attr("opacity",1);
 const conn=new Set([d.id]);links.forEach(l=>{if(l.source.id===d.id)conn.add(l.target.id);if(l.target.id===d.id)conn.add(l.source.id);});
 link.attr("stroke-opacity",l=>(l.source.id===d.id||l.target.id===d.id)?0.8:0.04).attr("stroke-width",l=>(l.source.id===d.id||l.target.id===d.id)?2.5:0.3);
@@ -185,17 +409,20 @@ node.select("circle").attr("opacity",n=>conn.has(n.id)?1:0.1);
 labels.attr("opacity",n=>conn.has(n.id)?1:0.08);
 }).on("mousemove",function(event){tooltip.style("left",(event.clientX+14)+"px").style("top",(event.clientY-8)+"px");
 }).on("mouseout",function(){tooltip.style("display","none");
-node.select("circle").transition().duration(150).attr("r",d=>nodeRadius(d)).attr("opacity",0.85);
+d3.select(this).select("circle").transition().duration(150).attr("r",d=>nodeRadius(d));
+if(currentPath){highlightPath(currentPath);}else{
+node.select("circle").attr("opacity",0.85);
 link.attr("stroke-opacity",0.25).attr("stroke-width",d=>(d.type==="funding"||d.type==="compute")?1.5:0.8);
-linkLabel.attr("opacity",0);labels.attr("opacity",1);});
+linkLabel.attr("opacity",0);labels.attr("opacity",1);}});
 
-node.on("click",function(event,d){
-event.stopPropagation();
+node.on("click",function(event,d){event.stopPropagation();openPanel(d);});
+
+function openPanel(d){
 const panel=document.getElementById("detail-panel");
 const pc=document.getElementById("panel-photo-container");
 const color=typeColors[d.type]||"#888";
-if(d.img){pc.innerHTML='<img class="panel-photo '+(d.type.includes("company")||d.type==="startup"?"company":"")+'" src="'+d.img+'" onerror="this.outerHTML=\'<div class=panel-initials style=background:'+color+'>'+d.label.split(" ").map(w=>w[0]).join("").slice(0,2)+'</div>\'">';}
-else{const ini=d.label.split(" ").map(w=>w[0]).join("").slice(0,2);pc.innerHTML='<div class="panel-initials '+(d.type.includes("company")||d.type==="startup"?"company":"")+'" style="background:'+color+'">'+ini+'</div>';}
+if(d.img){pc.innerHTML='<img class="panel-photo '+(d.type.includes("company")||d.type==="startup"||d.type==="university"?"company":"")+'" src="'+d.img+'" onerror="this.outerHTML='\''<div class=panel-initials style=background:'+color+'>'+d.label.split(" ").map(w=>w[0]).join("").slice(0,2)+'</div>'\''">' ;}
+else{const ini=d.label.split(" ").map(w=>w[0]).join("").slice(0,2);pc.innerHTML='<div class="panel-initials '+(d.type.includes("company")||d.type==="startup"||d.type==="university"?"company":"")+'" style="background:'+color+'">'+ini+'</div>';}
 document.getElementById("panel-name").textContent=d.label;
 document.getElementById("panel-role").textContent=d.role||"";
 const te=document.getElementById("panel-tier");te.textContent=d.tier+"-Tier";te.style.background=color+"22";te.style.color=color;
@@ -208,7 +435,9 @@ links.forEach(l=>{const s=typeof l.source==="object"?l.source.id:l.source;const 
 if(s===d.id||t===d.id){const o=s===d.id?t:s;const dir=s===d.id?"→":"←";const ec=edgeColors[l.type]||"#666";
 const li=document.createElement("li");li.innerHTML='<span class="conn-type" style="background:'+ec+'22;color:'+ec+'">'+l.type+'</span> '+dir+' <strong>'+o+'</strong>: '+l.label;cl.appendChild(li);}});
 document.getElementById("panel-tags").innerHTML=(d.tags||[]).map(t=>'<span class="panel-tag">'+t+'</span>').join("");
-panel.classList.add("open");});
+renderMetrics(d.id);
+renderNews(d.id);
+panel.classList.add("open");}
 
 svg.on("click",()=>closePanel());
 function closePanel(){document.getElementById("detail-panel").classList.remove("open");}
@@ -226,8 +455,35 @@ let labelsOn=true;function toggleLabels(){labelsOn=!labelsOn;labels.style("displ
 let edgesOn=true;function toggleEdges(){edgesOn=!edgesOn;link.style("display",edgesOn?"block":"none");linkLabel.style("display",edgesOn?"block":"none");document.getElementById("btn-edges").textContent="Edges: "+(edgesOn?"On":"Off");document.getElementById("btn-edges").classList.toggle("active",!edgesOn);}
 const tiers=["All","S","A","B"];let tierIdx=0;
 function cycleTierFilter(){tierIdx=(tierIdx+1)%tiers.length;const t=tiers[tierIdx];document.getElementById("btn-tier").textContent=t==="All"?"All Tiers":t+"-Tier Only";document.getElementById("btn-tier").classList.toggle("active",t!=="All");node.style("display",d=>(t==="All"||d.tier===t)?"block":"none");link.style("display",l=>{if(!edgesOn)return"none";if(t==="All")return"block";const sT=(typeof l.source==="object"?l.source:nodes.find(n=>n.id===l.source))?.tier;const tT=(typeof l.target==="object"?l.target:nodes.find(n=>n.id===l.target))?.tier;return(sT===t||tT===t)?"block":"none";});}
+const views=["All","People","Companies","Academia"];let viewIdx=0;
+function cycleViewFilter(){viewIdx=(viewIdx+1)%views.length;const v=views[viewIdx];document.getElementById("btn-view").textContent="View: "+v;document.getElementById("btn-view").classList.toggle("active",v!=="All");node.style("display",d=>{if(v==="All")return"block";if(v==="People")return d.type.includes("person")?"block":"none";if(v==="Companies")return(d.type.includes("company")||d.type==="startup")?"block":"none";if(v==="Academia")return d.type==="university"?"block":"none";return"block";});link.style("display",l=>{if(!edgesOn)return"none";if(v==="All")return"block";const s=typeof l.source==="object"?l.source:nodes.find(n=>n.id===l.source);const t=typeof l.target==="object"?l.target:nodes.find(n=>n.id===l.target);const sOk=s&&(v==="People"?s.type.includes("person"):v==="Companies"?(s.type.includes("company")||s.type==="startup"):v==="Academia"?s.type==="university":true);const tOk=t&&(v==="People"?t.type.includes("person"):v==="Companies"?(t.type.includes("company")||t.type==="startup"):v==="Academia"?t.type==="university":true);return(sOk||tOk)?"block":"none";});}
 document.getElementById("search").addEventListener("input",function(){const q=this.value.toLowerCase().trim();if(!q){node.select("circle").attr("opacity",0.85);labels.attr("opacity",1);link.attr("stroke-opacity",0.25);return;}const m=new Set();nodes.forEach(n=>{if(n.label.toLowerCase().includes(q)||n.id.toLowerCase().includes(q)||(n.tags||[]).some(t=>t.toLowerCase().includes(q))||(n.role||"").toLowerCase().includes(q))m.add(n.id);});node.select("circle").attr("opacity",n=>m.has(n.id)?1:0.06);labels.attr("opacity",n=>m.has(n.id)?1:0.04);});
-document.getElementById("node-count").textContent=nodes.length+" nodes · "+links.length+" connections";
+
+// Path Finder
+let pfOpen=true;
+function togglePathFinder(){pfOpen=!pfOpen;document.getElementById("pf-body").style.display=pfOpen?"block":"none";document.querySelector(".pf-toggle").textContent=pfOpen?"\u2212":"+";}
+function populatePathSelects(){const sorted=[...nodes].sort((a,b)=>a.label.localeCompare(b.label));const opts=sorted.map(n=>`<option value="${n.id}">${n.label}</option>`).join("");document.getElementById("pf-from").innerHTML=opts;document.getElementById("pf-to").innerHTML=opts;document.getElementById("pf-from").value="Geoffrey Hinton";document.getElementById("pf-to").value="Sam Altman";}
+function buildAdj(){const adj={};nodes.forEach(n=>adj[n.id]=[]);links.forEach(l=>{const s=typeof l.source==="object"?l.source.id:l.source;const t=typeof l.target==="object"?l.target.id:l.target;if(!adj[s])adj[s]=[];if(!adj[t])adj[t]=[];adj[s].push({to:t,type:l.type,label:l.label});adj[t].push({to:s,type:l.type,label:l.label});});return adj;}
+function bfsPath(startId,endId){if(startId===endId)return[startId];const adj=buildAdj();const queue=[[startId]];const visited=new Set([startId]);while(queue.length){const path=queue.shift();const cur=path[path.length-1];for(const nb of(adj[cur]||[])){if(!visited.has(nb.to)){const newPath=[...path,nb.to];if(nb.to===endId)return newPath;visited.add(nb.to);queue.push(newPath);}}}return null;}
+let currentPath=null;
+function runPathFinder(){const from=document.getElementById("pf-from").value;const to=document.getElementById("pf-to").value;const result=document.getElementById("pf-result");if(!from||!to)return;const path=bfsPath(from,to);currentPath=path;if(!path){result.innerHTML='<div class="pf-no-path">No path found between these nodes.</div>';highlightPath(null);return;}const hops=path.length-1;const chain=path.map((id,i)=>{const n=nodes.find(x=>x.id===id);const label=n?n.label:id;return(i<path.length-1)?`<span class="pf-node-chip" onclick="focusNode('${id}')">${label}</span><span class="pf-hop-arrow">→</span>`:`<span class="pf-node-chip" onclick="focusNode('${id}')">${label}</span>`;}).join("");result.innerHTML=`<div class="pf-path-chain">${chain}</div><div class="pf-summary">${hops} hop${hops!==1?"s":""} &middot; click any node to open details</div>`;highlightPath(path);}
+function clearPath(){currentPath=null;document.getElementById("pf-result").innerHTML="";highlightPath(null);}
+function highlightPath(pathIds){const pathSet=new Set(pathIds||[]);node.select("circle").attr("opacity",n=>!pathIds?0.85:pathSet.has(n.id)?1:0.08).attr("stroke",n=>pathIds&&pathSet.has(n.id)?"#fff":(n.tier==="S"?"rgba(255,255,255,0.3)":"none")).attr("stroke-width",n=>pathIds&&pathSet.has(n.id)?2.5:(n.tier==="S"?1.5:0));labels.attr("opacity",n=>!pathIds?1:pathSet.has(n.id)?1:0.04);link.attr("stroke-opacity",l=>{if(!pathIds)return 0.25;const s=typeof l.source==="object"?l.source.id:l.source;const t=typeof l.target==="object"?l.target.id:l.target;const onPath=pathIds.some((id,i)=>i<pathIds.length-1&&((id===s&&pathIds[i+1]===t)||(id===t&&pathIds[i+1]===s)));return onPath?0.9:0.04;}).attr("stroke-width",l=>{if(!pathIds)return(l.type==="funding"||l.type==="compute")?1.5:0.8;const s=typeof l.source==="object"?l.source.id:l.source;const t=typeof l.target==="object"?l.target.id:l.target;const onPath=pathIds.some((id,i)=>i<pathIds.length-1&&((id===s&&pathIds[i+1]===t)||(id===t&&pathIds[i+1]===s)));return onPath?3:0.4;});}
+function focusNode(id){const n=nodes.find(x=>x.id===id);if(n)openPanel(n);}
+
+// Key Metrics
+function computeMetrics(nodeId){let total=0,inDeg=0,outDeg=0,sTierNeighbors=0;const typeCounts={};const neighborIds=new Set();links.forEach(l=>{const s=typeof l.source==="object"?l.source.id:l.source;const t=typeof l.target==="object"?l.target.id:l.target;if(s===nodeId||t===nodeId){total++;typeCounts[l.type]=(typeCounts[l.type]||0)+1;const neighborId=s===nodeId?t:s;neighborIds.add(neighborId);if(s===nodeId)outDeg++;else inDeg++;}});neighborIds.forEach(nid=>{const n=nodes.find(x=>x.id===nid);if(n&&n.tier==="S")sTierNeighbors++;});const centrality=((total/(nodes.length-1))*100).toFixed(1);return{total,inDeg,outDeg,sTierNeighbors,centrality,typeCounts};}
+function renderMetrics(nodeId){const m=computeMetrics(nodeId);const grid=document.getElementById("panel-metrics");grid.innerHTML=`<div class="metric-box"><div class="metric-val">${m.total}</div><div class="metric-lbl">Total Links</div></div><div class="metric-box"><div class="metric-val">${m.centrality}%</div><div class="metric-lbl">Degree Centrality</div></div><div class="metric-box"><div class="metric-val">${m.sTierNeighbors}</div><div class="metric-lbl">S-Tier Neighbors</div></div><div class="metric-box"><div class="metric-val">${Object.keys(m.typeCounts).length}</div><div class="metric-lbl">Link Types</div></div>`;const bars=document.getElementById("panel-conn-bars");const maxCount=Math.max(...Object.values(m.typeCounts),1);bars.innerHTML=Object.entries(m.typeCounts).sort((a,b)=>b[1]-a[1]).map(([type,count])=>{const color=edgeColors[type]||"#666";const pct=(count/maxCount*100).toFixed(0);return`<div class="conn-bar-row"><div class="conn-bar-label">${type}</div><div class="conn-bar-track"><div class="conn-bar-fill" style="width:${pct}%;background:${color}"></div></div><div class="conn-bar-count">${count}</div></div>`;}).join("");}
+
+// News Feed
+function renderNews(nodeId){const section=document.getElementById("panel-news-section");const container=document.getElementById("panel-news");const items=newsData[nodeId];if(!items||items.length===0){section.style.display="none";return;}section.style.display="block";container.innerHTML=items.map(item=>`<div class="news-item"><div class="news-headline">${item.title}</div><div class="news-meta"><span class="news-source">${item.source}</span><span class="news-date">${item.date}</span><span class="news-tag">${item.tag}</span></div></div>`).join("");}
+
+// Stats and init
+const companyCnt=nodes.filter(n=>n.type.includes("company")||n.type==="startup").length;
+const peopleCnt=nodes.filter(n=>n.type.includes("person")).length;
+const uniCnt=nodes.filter(n=>n.type==="university").length;
+document.getElementById("node-count").textContent=nodes.length+" nodes ("+companyCnt+" cos · "+peopleCnt+" people · "+uniCnt+" unis) · "+links.length+" connections";
+populatePathSelects();
 setTimeout(()=>{svg.transition().duration(1000).call(zoom.transform,d3.zoomIdentity.translate(width*0.05,height*0.05).scale(0.75));},2000);
 </script>
 </body>
