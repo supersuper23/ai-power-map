@@ -421,8 +421,11 @@ function openPanel(d){
 const panel=document.getElementById("detail-panel");
 const pc=document.getElementById("panel-photo-container");
 const color=typeColors[d.type]||"#888";
-if(d.img){pc.innerHTML='<img class="panel-photo '+(d.type.includes("company")||d.type==="startup"||d.type==="university"?"company":"")+'" src="'+d.img+'" onerror="this.outerHTML='\''<div class=panel-initials style=background:'+color+'>'+d.label.split(" ").map(w=>w[0]).join("").slice(0,2)+'</div>'\''">' ;}
-else{const ini=d.label.split(" ").map(w=>w[0]).join("").slice(0,2);pc.innerHTML='<div class="panel-initials '+(d.type.includes("company")||d.type==="startup"||d.type==="university"?"company":"")+'" style="background:'+color+'">'+ini+'</div>';}
+const isC=d.type.includes("company")||d.type==="startup"||d.type==="university";
+const ini=d.label.split(" ").map(w=>w[0]).join("").slice(0,2);
+const div=document.createElement("div");div.className="panel-initials"+(isC?" company":"");div.style.background=color;div.textContent=ini;
+if(d.img){const img=document.createElement("img");img.className="panel-photo"+(isC?" company":"");img.src=d.img;img.onerror=function(){this.replaceWith(div);};pc.innerHTML="";pc.appendChild(img);}
+else{pc.innerHTML="";pc.appendChild(div);}
 document.getElementById("panel-name").textContent=d.label;
 document.getElementById("panel-role").textContent=d.role||"";
 const te=document.getElementById("panel-tier");te.textContent=d.tier+"-Tier";te.style.background=color+"22";te.style.color=color;
